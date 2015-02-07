@@ -60,6 +60,18 @@ var vis = d3.select("body").append("svg:svg")
         .attr("class", "node")
         .call(node_drag);
 
+    // var node = vis.selectAll("g.node")
+    //     .data(json.nodes)
+    //     .enter().append("svg:g")
+    //     .attr("class", "node")
+    //     .call(node_drag)
+    //     .append("circle")
+    //     .attr("class", "node")
+    //     .attr("r", 8)
+    //     .style("fill", function(d) { return return d.color; })
+    //     .call(force.drag);
+
+
     node.append("svg:image")
         .attr("class", "circle")
         .attr("xlink:href", "images/electric.png")

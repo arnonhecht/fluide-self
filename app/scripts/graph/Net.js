@@ -5,7 +5,7 @@ function Net (vertices) {
         var params = {
             name: d3Vertice.name,
             id: d3Vertice.group-1,
-            threshold: 2,
+            threshold: 1,
             initScore: 0,
             d3Obj: d3Vertice
         };
@@ -32,11 +32,31 @@ Net.prototype = {
     getV: function(eId) {
         return _.findWhere(this.netVertices, {id: eId});
     },
-    getOverScore: function() {
+    getActives: function() {
         return _.filter(this.netVertices, function(v) {return v.active;});
     },
     determineActive: function() {
         _.each(this.netVertices, function(v){v.determineActive()});
+    },
+    updateScores: function(){
+        _.each(this.netVertices, function(v){v.updateScore(1)});
+    },
+    sendSignals: function() {
+        _.each(this.netVertices, function(v){v.sendSignal(1)});
+    },
+    cleanOutgoingVertices: function() {
+        _.each(this.netVertices, function(v){v.cleanOutgoingVertices()});
+    },
+    updateRoot: function() {
+        var root = this.getV(0);
+        root.updateScore(1);
+        // _.each(this.netVertices, function(v) {
+        //     v.updateNeightbours(1);
+        // });
+        // root.updateNeightbours(1);
+    },
+    calculateNextSignal: function() {
+        _.each(this.netVertices, function(v){v.calculateNextSignal()});
     }
 
 };		

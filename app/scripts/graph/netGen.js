@@ -52,6 +52,12 @@ var getEdges = function(edges, vertice, arr, reverse) {
 	return edges.concat(connect(vertice, arr, reverse));
 };
 
+var findEdge = function(source, target) {
+	return _.find(edges, function(e){
+		return (e.source.group-1==source && e.target.group-1==target);
+	});
+};
+
 var connectPattern = function(edges, someLayer, min, step) {
 	for (var i=0; i<someLayer.length; i++) {
 		var t = i*step + min;
@@ -107,40 +113,52 @@ json = makeNet(verticesRepresentation, edges);
 
 
 function algo(net, v, val) {
-	// if  (v.updateScore(val)) {
-		v.updateScore(val);
-		v.updateNeightbours(val);				
-	// } else {
-		// v.updateNeightbours(0);
-	// }
+
+	v.updateScore(val); // update only single node - always for the root
+	v.updateNeightbours(val); // recursively updates all nodes
+
 	net.determineActive();
 	return net.getOverScore();
 }
+
+
 
 var mainTicker = function() {
 	_.each(edges, function(e){
 		e.color = 'blue';
 	});
-	var currVertices = algo(myNet, myNet.getV(0), 1);
-	if (0<currVertices.length) {
+	// myNet.updateScores();
+	myNet.updateRoot();
+	myNet.determineActive();
+	myNet.calculateNextSignal();
+	var currSignalingVertices = myNet.getActives();
+	// var currSignalingVertices = algo(myNet, myNet.getV(0), 1);
+	// _.each(currSignalingVertices, function(v) {
+	// 	v.color = 'red';
+	// });
+	if (0<currSignalingVertices.length) {
 		console.log('yaay');
-		_.each(currVertices, function(v) {
-			var outgoingEdges = getAllOutgoingEdges(v.id+1);
-			_.each(outgoingEdges, function(e){
+		_.each(currSignalingVertices, function(v) {
+			var outgoingVertices = v.getOutgoingVertices();//getAllOutgoingEdges(v.id+1);
+			_.each(outgoingVertices, function(targetVertice){
+				var e = findEdge(v.id, targetVertice.id);
 				e.color = 'red';
 				// setTimeout(function() {
 				// 	e.color = 'blue';
 				// }, 100);
 				tick();
 			});
+			// v.cleanOutgoingVertices();
 		});
 	}
+	myNet.sendSignals();
+	myNet.cleanOutgoingVertices();
 	// var e = getRandomEdge();
 	// e.color = 'yellow';
 	// setTimeout(function() {
 	// 	e.color = 'blue';
 	// }, 300);
-	setTimeout(mainTicker, 500);
+	setTimeout(mainTicker, 400);
 	tick();
 };
 

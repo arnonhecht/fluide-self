@@ -8,6 +8,7 @@ function Vertice (params) {
     this.currScore = params.initScore;
     this.d3Obj = params.d3Obj;	
     this.iter = 0;
+    this.outgoingVertices = [];
 }
 
 Vertice.prototype = {
@@ -16,21 +17,41 @@ Vertice.prototype = {
     updateScore:function (theScoreToAdd)  {
     	this.iter++;
         this.currScore += theScoreToAdd;
-
+        // this.determineActive();
+       // _.each(this.outVertices, function(v) {
+       // 		if (this.isSignalOut(0.5) && this.active) {
+       // 			// v.updateNeightbours(val);
+       // 			this.outgoingVertices.push(v);
+       // 		} else {
+       // 			// v.updateNeightbours(0);
+       // 		}
+       // }.bind(this));
         this.d3Obj.name = this.name + "(" + this.currScore + ")" //+ "[" + this.iter + "]";
         return false;
     },
 
-    updateNeightbours:function (val)  {
+	calculateNextSignal: function() {
+		 // this.determineActive();
        _.each(this.outVertices, function(v) {
        		if (this.isSignalOut(0.5) && this.active) {
-       			v.updateNeightbours(val);
-       		} else {
-       			v.updateNeightbours(0);
-       		}
-       		v.updateScore(val);
+       			// v.updateNeightbours(val);
+       			this.outgoingVertices.push(v);
+       		} 
        }.bind(this));
-    },
+	},
+    // updateNeightbours:function (val)  {
+    //    // _.each(this.outVertices, function(v) {
+    //     this.determineActive();
+    //    _.each(this.outVertices, function(v) {
+    //    		if (this.isSignalOut(0.5) && this.active) {
+    //    			// v.updateNeightbours(val);
+    //    			this.outgoingVertices.push(v);
+    //    		} else {
+    //    			// v.updateNeightbours(0);
+    //    		}
+    //    		v.updateScore(val);
+    //    }.bind(this));
+    // },
 
     determineActive: function() {
 	  	this.active = false;
@@ -45,5 +66,28 @@ Vertice.prototype = {
 
 	isSignalOut: function(w) {
 		return (Math.random() < w);
+	},
+    
+    getOutgoingVertices: function() {
+    	return this.outgoingVertices;
+    },
+
+	cleanOutgoingVertices: function() {
+    	this.outgoingVertices.length = 0;
+	},
+
+	sendSignal: function (val) {
+       _.each(this.outgoingVertices, function(v) {
+       		if (this.isSignalOut(0.9) && this.active) {
+       			v.updateScore(val);
+       		}
+       }.bind(this));
+		// _.each(this.outgoingVertices, function(v) {
+  //      		v.updateScore(val);
+		// })
 	}
 };		
+
+
+
+
