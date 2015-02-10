@@ -2,6 +2,7 @@ function Vertice (params) {
     this.name = params.name;
     this.id = params.id;
     this.threshold = params.threshold;
+    this.verticeProbability = params.verticeProbability
     this.outVertices = [];
     this.inVertices = [];
     this.initScore = params.initScore;
@@ -23,7 +24,7 @@ Vertice.prototype = {
 
 	calculateNextSignal: function() {
        _.each(this.outVertices, function(v) {
-       		if (this.isSignalOut(0.5) && this.active) {
+       		if (this.isSignalOut(this.verticeProbability) && this.active) {
        			this.outgoingVertices.push(v);
        		} 
        }.bind(this));

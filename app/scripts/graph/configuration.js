@@ -1,6 +1,7 @@
 conf = {
 	cycleTime: 100,
-	verticeThreshold: 1
+	threshold: 1,
+	verticeProbability: 0.5
 };
 
 function changeCycleTime(that) {
@@ -13,6 +14,13 @@ function changeCycleTime(that) {
 function changeNodeThreshold(that) {
 	var val = parseInt(that.value);
 	if (val) {
-		conf.verticeThreshold = val;		
+		conf.threshold = val;		
+	}
+}
+
+function changeNodeProbability(that) {
+	var val = parseFloat(that.value);
+	if (val) {
+		conf.verticeProbability = val;		
 	}
 }

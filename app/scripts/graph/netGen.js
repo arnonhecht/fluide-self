@@ -115,7 +115,8 @@ json = makeNet(verticesRepresentation, edges);
 
 
 var mainTicker = function() {
-	myNet.checkAndSetParams();
+	myNet.checkAndSetParams('threshold');
+	myNet.checkAndSetParams('verticeProbability');
 	_.each(edges, function(e){
 		e.color = 'blue';
 	});

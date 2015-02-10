@@ -1,12 +1,13 @@
 function Net (vertices) {
 
-    this.threshold = conf.verticeThreshold;
+    this.threshold = conf.threshold;
 
     var getNetVertice = function(d3Vertice) {
         var params = {
             name: d3Vertice.name,
             id: d3Vertice.group-1,
             threshold: 1,
+            verticeProbability: 0.5,
             initScore: 0,
             d3Obj: d3Vertice
         };
@@ -18,11 +19,11 @@ function Net (vertices) {
 
 Net.prototype = {
     constructor: Net,
-    checkAndSetParams: function() {
-        if (this.threshold != conf.verticeThreshold) {
-            this.threshold = conf.verticeThreshold;
+    checkAndSetParams: function(param) {
+        if (this[param] != conf[param]) {
+            this[param] = conf[param];
             _.each(this.netVertices, function(v) {
-                v.threshold = conf.verticeThreshold;
+                v[param] = conf[param];
             })
         }
     },
