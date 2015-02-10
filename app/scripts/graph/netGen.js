@@ -112,54 +112,34 @@ json = makeNet(verticesRepresentation, edges);
 
 
 
-function algo(net, v, val) {
-
-	v.updateScore(val); // update only single node - always for the root
-	v.updateNeightbours(val); // recursively updates all nodes
-
-	net.determineActive();
-	return net.getOverScore();
-}
-
 
 
 var mainTicker = function() {
+	myNet.checkAndSetParams();
 	_.each(edges, function(e){
 		e.color = 'blue';
 	});
-	// myNet.updateScores();
+
 	myNet.updateRoot();
 	myNet.determineActive();
 	myNet.calculateNextSignal();
 	var currSignalingVertices = myNet.getActives();
-	// var currSignalingVertices = algo(myNet, myNet.getV(0), 1);
-	// _.each(currSignalingVertices, function(v) {
-	// 	v.color = 'red';
-	// });
 	if (0<currSignalingVertices.length) {
 		console.log('yaay');
 		_.each(currSignalingVertices, function(v) {
-			var outgoingVertices = v.getOutgoingVertices();//getAllOutgoingEdges(v.id+1);
+			var outgoingVertices = v.getOutgoingVertices();
 			_.each(outgoingVertices, function(targetVertice){
 				var e = findEdge(v.id, targetVertice.id);
 				e.color = 'red';
-				// setTimeout(function() {
-				// 	e.color = 'blue';
-				// }, 100);
-				tick();
 			});
-			// v.cleanOutgoingVertices();
 		});
 	}
+	tick(); // Render the net
+
 	myNet.sendSignals();
 	myNet.cleanOutgoingVertices();
-	// var e = getRandomEdge();
-	// e.color = 'yellow';
-	// setTimeout(function() {
-	// 	e.color = 'blue';
-	// }, 300);
-	setTimeout(mainTicker, 400);
-	tick();
+
+	setTimeout(mainTicker, conf.cycleTime);
 };
 
 setTimeout(mainTicker, 100);

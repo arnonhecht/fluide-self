@@ -1,5 +1,6 @@
 function Net (vertices) {
 
+    this.threshold = conf.verticeThreshold;
 
     var getNetVertice = function(d3Vertice) {
         var params = {
@@ -17,7 +18,14 @@ function Net (vertices) {
 
 Net.prototype = {
     constructor: Net,
-
+    checkAndSetParams: function() {
+        if (this.threshold != conf.verticeThreshold) {
+            this.threshold = conf.verticeThreshold;
+            _.each(this.netVertices, function(v) {
+                v.threshold = conf.verticeThreshold;
+            })
+        }
+    },
     addEdge: function(e) {
         var source = this.getV(e.source);
         var target = this.getV(e.target);
@@ -50,10 +58,6 @@ Net.prototype = {
     updateRoot: function() {
         var root = this.getV(0);
         root.updateScore(1);
-        // _.each(this.netVertices, function(v) {
-        //     v.updateNeightbours(1);
-        // });
-        // root.updateNeightbours(1);
     },
     calculateNextSignal: function() {
         _.each(this.netVertices, function(v){v.calculateNextSignal()});

@@ -33,12 +33,12 @@
       </div>
 
       <div class="jumbotron">
-        <h1>'Allo, 'Allo!</h1>
-        <p class="lead">Always a pleasure scaffolding your apps.</p>
-        <p><a class="btn btn-lg btn-success" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p>
+        <h1>Fugara Network visualization!</h1>
+        <p class="lead">Pull intersection number 1 in order to see the network spread out nicely :)</p>
+        <!-- <p><a class="btn btn-lg btn-success" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p> -->
       </div>
 
-      <div class="row marketing">
+     <!--  <div class="row marketing">
         <div class="col-lg-6">
           <h4>HTML5 Boilerplate</h4>
           <p>HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.</p>
@@ -50,14 +50,17 @@
 
 
         </div>
-      </div>
+      </div> -->
 
       <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+        <p><span class="glyphicon glyphicon-heart"></span> Noni :)</p>
       </div>
 
     </div>
 
+    <!-- App controlls -->
+    <label>Cycle Time (ms) </label>       <input type="text" value="400" onkeyup="changeCycleTime(this)" />
+    <label>Node Threshold  </label>       <input type="text" value="2" onkeyup="changeNodeThreshold(this)" />
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
@@ -92,6 +95,7 @@
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/main.js"></script>
+        <script src="scripts/graph/configuration.js"></script>
         <script src="scripts/plugins/underscore.js"></script>
         <script src="scripts/plugins/d3.js"></script>
         <script src="scripts/graph/Vertice.js"></script>
@@ -101,5 +105,6 @@
         <script src="scripts/graph/dragDropNet.js"></script>
         <script src="scripts/graph/algorithms.js"></script>
         <!-- endbuild -->
+
 </body>
 </html>

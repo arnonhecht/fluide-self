@@ -17,45 +17,20 @@ Vertice.prototype = {
     updateScore:function (theScoreToAdd)  {
     	this.iter++;
         this.currScore += theScoreToAdd;
-        // this.determineActive();
-       // _.each(this.outVertices, function(v) {
-       // 		if (this.isSignalOut(0.5) && this.active) {
-       // 			// v.updateNeightbours(val);
-       // 			this.outgoingVertices.push(v);
-       // 		} else {
-       // 			// v.updateNeightbours(0);
-       // 		}
-       // }.bind(this));
         this.d3Obj.name = this.name + "(" + this.currScore + ")" //+ "[" + this.iter + "]";
         return false;
     },
 
 	calculateNextSignal: function() {
-		 // this.determineActive();
        _.each(this.outVertices, function(v) {
        		if (this.isSignalOut(0.5) && this.active) {
-       			// v.updateNeightbours(val);
        			this.outgoingVertices.push(v);
        		} 
        }.bind(this));
 	},
-    // updateNeightbours:function (val)  {
-    //    // _.each(this.outVertices, function(v) {
-    //     this.determineActive();
-    //    _.each(this.outVertices, function(v) {
-    //    		if (this.isSignalOut(0.5) && this.active) {
-    //    			// v.updateNeightbours(val);
-    //    			this.outgoingVertices.push(v);
-    //    		} else {
-    //    			// v.updateNeightbours(0);
-    //    		}
-    //    		v.updateScore(val);
-    //    }.bind(this));
-    // },
 
     determineActive: function() {
 	  	this.active = false;
-        // this.name = "[" + this.currScore + "]"
         if (this.threshold < this.currScore) {
         	this.currScore = this.initScore;
         	this.active = true;
@@ -82,9 +57,6 @@ Vertice.prototype = {
        			v.updateScore(val);
        		}
        }.bind(this));
-		// _.each(this.outgoingVertices, function(v) {
-  //      		v.updateScore(val);
-		// })
 	}
 };		
 
