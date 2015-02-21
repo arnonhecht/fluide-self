@@ -117,13 +117,15 @@ json = makeNet(verticesRepresentation, edges);
 var mainTicker = function() {
 	myNet.checkAndSetParams('threshold');
 	myNet.checkAndSetParams('verticeProbability');
-	_.each(edges, function(e){
-		e.color = 'blue';
-	});
+
+	// Reset the net
+	_.each(edges, function(e){e.color = 'blue';});
 
 	myNet.updateRoot();
 	myNet.determineActive();
 	myNet.calculateNextSignal();
+
+	// Paint edges of the signaling vertices
 	var currSignalingVertices = myNet.getActives();
 	if (0<currSignalingVertices.length) {
 		console.log('yaay');
