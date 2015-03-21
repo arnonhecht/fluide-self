@@ -104,6 +104,8 @@ var nodeRadius = '8px';
 
     force.on("tick", tick);
 
+
+
     function tick() {
         link.attr("x1", function(d) { return d.source.x; })
           .attr("y1", function(d) { return d.source.y; })

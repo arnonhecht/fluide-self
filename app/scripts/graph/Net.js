@@ -20,9 +20,9 @@ function Net (vertices, edges, preCycleOps, externalActivationCallback) {
                 ctorParams: {
                     id: 'NeuralNetLayer',
                     threshold: 1,
-                    verticeProbability: 0.5,
+                    verticeProbability: 1, //0.5,
                     initScore: 0,
-                    roots: [0]
+                    roots: [0, 2, 30, 17, 33, 27, 42]
                 }
             },]
         };

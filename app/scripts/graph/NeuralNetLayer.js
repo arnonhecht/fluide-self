@@ -68,7 +68,8 @@ NeuralNetLayer.prototype = {
 
     causeNetworkEffect:function (theScoreToAdd)  {
        	_.each(this.outgoingVertices, function(v) {
-       		if (this.isSignalOut(0.9) && this.active) {
+       		// if (this.isSignalOut(0.9) && this.active) {
+       			if (this.isSignalOut(1) && this.active) {
        			v.layers.getLayer('NeuralNetLayer').updateScore(1);
        		}
        }.bind(this));
