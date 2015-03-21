@@ -119,7 +119,11 @@ var mainTicker = function() {
 	myNet.checkAndSetParams('verticeProbability');
 
 	// Reset the net
-	_.each(edges, function(e){e.color = 'blue';});
+	_.each(edges, function(e){
+		// if (e.color!='green') {
+			e.color = 'blue';
+		// }
+	});
 
 	myNet.updateRoot();
 	myNet.determineActive();

@@ -68,17 +68,30 @@ var vis = d3.select("body").append("svg:svg")
     //     .append("circle")
     //     .attr("class", "node")
     //     .attr("r", 8)
-    //     .style("fill", function(d) { return return d.color; })
+    //     .style("fill", function(d) { return d.color; })
     //     .call(force.drag);
 
 
-    node.append("svg:image")
-        .attr("class", "circle")
-        .attr("xlink:href", "images/electric.png")
-        .attr("x", "-8px")
-        .attr("y", "-8px")
-        .attr("width", "16px")
-        .attr("height", "16px");
+    // For the "electic" image
+    // node.append("svg:image")
+    //     .attr("class", "circle")
+    //     .attr("xlink:href", "images/electric.png")
+    //     .attr("x", "-8px")
+    //     .attr("y", "-8px")
+    //     .attr("width", "16px")
+    //     .attr("height", "16px");
+
+    var changeColor = function(d) {
+        return d.verticeRef.layers.getLayer('SignalLayer').currColor;
+    };
+
+var nodeRadius = '8px';
+    node.append("circle")
+        // .attr("cx", function (d) { return d.x_axis; })
+        // .attr("cy", function (d) { return d.y_axis; })
+        .attr("r", function (d) { return nodeRadius; })
+        .style("fill", changeColor);
+
 
     var appendText = function(node) {
         node.append("svg:text")
@@ -96,10 +109,12 @@ var vis = d3.select("body").append("svg:svg")
           .attr("y1", function(d) { return d.source.y; })
           .attr("x2", function(d) { return d.target.x; })
           .attr("y2", function(d) { return d.target.y; })
-          .attr("style", function(d) { return 'stroke:'+ d.color +'; stroke-width:2'});
+          .attr("style", function(d) { return 'stroke:'+ d.color +'; stroke-width:4'});
 
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
+        // node.style("fill", changeColor);
+        vis.selectAll("g.node circle")
+            .style("fill", changeColor);
         // Change node's text
         vis.selectAll("g.node text")
                 .text(function(d) {  
@@ -108,12 +123,18 @@ var vis = d3.select("body").append("svg:svg")
         // node.text(function(d) { return d.name });
             // .text(function(){return 'aaaa'})
 
+        //todo: We should move this out of here as it should only happen once
         link.on('click', function(d, i) {
             console.log('yaaay');
             d.color = 'red';
+            d.source.verticeRef.layers.getLayer('SignalLayer').triggerSignal()
+            d.target.verticeRef.layers.getLayer('SignalLayer').triggerSignal()
             tick();
         });
-        node.on('click', function() {console.log('link yaaay!!!')});
+        node.on('click', function(d) {
+            d.verticeRef.layers.getLayer('SignalLayer').triggerSignal();
+            console.log('link yaaay!!!');
+        });
     };
 
 // });

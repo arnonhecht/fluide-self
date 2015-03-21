@@ -9,9 +9,19 @@ function Net (vertices) {
             threshold: 1,
             verticeProbability: 0.5,
             initScore: 0,
-            d3Obj: d3Vertice
+            d3Obj: d3Vertice,
+            layers: [{
+                id: 'SignalLayer',
+                layerCtor: SignalLayer,
+                ctorParams: {
+                    id: 'SignalLayer',
+                    currColor: 'blue'
+                }
+            }]
         };
-        return new Vertice(params);
+        var newVertice =  new Vertice(params);
+        d3Vertice.verticeRef = newVertice;
+        return newVertice;
     };
     
     this.netVertices  = _.map(vertices, getNetVertice);
@@ -32,6 +42,9 @@ Net.prototype = {
         var target = this.getV(e.target);
         source.outVertices.push(target);
         target.inVertices.push(source);
+
+        source.outEdges.push(e);
+        target.inEdges.push(e);
     },
     addEdges: function(edges) {
         _.each(edges, function(e) {

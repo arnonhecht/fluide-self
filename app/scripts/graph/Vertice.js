@@ -5,21 +5,24 @@ function Vertice (params) {
     this.verticeProbability = params.verticeProbability
     this.outVertices = [];
     this.inVertices = [];
+    this.inEdges = [];
+    this.outEdges = [];
     this.initScore = params.initScore;
     this.currScore = params.initScore;
     this.d3Obj = params.d3Obj;	
     this.iter = 0;
     this.outgoingVertices = [];
-}
+    this.layers = new Layers(this, params.layers)
+};
 
 Vertice.prototype = {
     constructor: Vertice,
 
     updateScore:function (theScoreToAdd)  {
     	this.iter++;
-        this.currScore += theScoreToAdd;
-        this.d3Obj.name = this.name + "(" + this.currScore + ")" //+ "[" + this.iter + "]";
-        return false;
+      this.currScore += theScoreToAdd;
+      this.d3Obj.name = this.name + "(" + this.currScore + ")" //+ "[" + this.iter + "]";
+      return false;
     },
 
 	calculateNextSignal: function() {
@@ -28,16 +31,17 @@ Vertice.prototype = {
        			this.outgoingVertices.push(v);
        		} 
        }.bind(this));
+       this.layers.determineNetworkEffect();
 	},
 
     determineActive: function() {
 	  	this.active = false;
-        if (this.threshold < this.currScore) {
-        	this.currScore = this.initScore;
-        	this.active = true;
-        	return true;
-        }
-        return false
+      if (this.threshold < this.currScore) {
+      	this.currScore = this.initScore;
+      	this.active = true;
+      }
+      this.layers.determineCurrentState();
+      return this.active
     },
 
 	isSignalOut: function(w) {
@@ -50,6 +54,7 @@ Vertice.prototype = {
 
 	cleanOutgoingVertices: function() {
     	this.outgoingVertices.length = 0;
+      this.layers.prepareForNextState();
 	},
 
 	sendSignal: function (val) {
@@ -58,6 +63,7 @@ Vertice.prototype = {
        			v.updateScore(val);
        		}
        }.bind(this));
+       this.layers.causeNetworkEffect();
 	}
 };		
 
