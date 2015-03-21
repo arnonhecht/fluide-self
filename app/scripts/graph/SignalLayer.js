@@ -14,8 +14,8 @@ SignalLayer.prototype = {
     // Public layer interface to implement
     updateRoot: function() {
     },
-    
-    determineCurrentState:function (theScoreToAdd)  {
+
+    determineCurrentState: function (theScoreToAdd)  {
         if (this.active) {
             this.currColor ='red'
         } else {
@@ -23,7 +23,7 @@ SignalLayer.prototype = {
         }
     },
 
-    determineNetworkEffect:function (theScoreToAdd)  {
+    determineNetworkEffect: function (theScoreToAdd)  {
         if (0<this.cyclesTillTimeout) {
             this.cyclesTillTimeout--;
         }
@@ -38,10 +38,10 @@ SignalLayer.prototype = {
         }
     },
 
-    causeNetworkEffect:function (theScoreToAdd)  {
+    causeNetworkEffect: function (theScoreToAdd)  {
     },
 
-    prepareForNextState:function (theScoreToAdd)  {
+    prepareForNextState: function (theScoreToAdd)  {
     },
 
 
