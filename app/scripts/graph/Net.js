@@ -1,4 +1,4 @@
-function Net (vertices) {
+function Net (vertices, edges, preCycleOps, externalActivationCallback) {
 
     this.threshold = conf.threshold;
 
@@ -6,9 +6,6 @@ function Net (vertices) {
         var params = {
             name: d3Vertice.name,
             id: d3Vertice.group-1,
-            threshold: 1,
-            verticeProbability: 0.5,
-            initScore: 0,
             d3Obj: d3Vertice,
             layers: [{
                 id: 'SignalLayer',
@@ -17,7 +14,17 @@ function Net (vertices) {
                     id: 'SignalLayer',
                     currColor: 'blue'
                 }
-            }]
+            },{
+                id: 'NeuralNetLayer',
+                layerCtor: NeuralNetLayer,
+                ctorParams: {
+                    id: 'NeuralNetLayer',
+                    threshold: 1,
+                    verticeProbability: 0.5,
+                    initScore: 0,
+                    roots: [0]
+                }
+            },]
         };
         var newVertice =  new Vertice(params);
         d3Vertice.verticeRef = newVertice;
@@ -25,10 +32,16 @@ function Net (vertices) {
     };
     
     this.netVertices  = _.map(vertices, getNetVertice);
+    this.addEdges(edges);
+
+    this.preCycleOps = preCycleOps;
+    this.externalActivationCallback = externalActivationCallback;
 };
 
 Net.prototype = {
     constructor: Net,
+
+    // Private Functions
     checkAndSetParams: function(param) {
         if (this[param] != conf[param]) {
             this[param] = conf[param];
@@ -50,31 +63,53 @@ Net.prototype = {
         _.each(edges, function(e) {
             this.addEdge(e);
         }.bind(this));
+        this.allEdges = edges;
     },
     getV: function(eId) {
         return _.findWhere(this.netVertices, {id: eId});
     },
     getActives: function() {
-        return _.filter(this.netVertices, function(v) {return v.active;});
+        return _.filter(this.netVertices, function(v) {return v.isActive();});
     },
-    determineActive: function() {
-        _.each(this.netVertices, function(v){v.determineActive()});
+
+
+
+
+    // Public Functions
+
+    // Perform external operations. e.g. 1) setting D3 visual objects 2) sending data to "Melodi Generator" or DMX components
+    prepareExternalDataForNextCycle: function() {
+        this.preCycleOps(this.allEdges);
     },
-    updateScores: function(){
-        _.each(this.netVertices, function(v){v.updateScore(1)});
+
+
+    // Give roots an initial value - signal has to start somewhere.
+    // We can have more than one root in order to simulate flow from different parts of the net
+    // In reality the roots should probably be "hidden", meaning they might not need to represent an actual node
+    updateRoots: function() {
+        _.each(this.netVertices, function(v){v.updateRoots()});
     },
-    sendSignals: function() {
-        _.each(this.netVertices, function(v){v.sendSignal(1)});
+    determineCurrentState: function() {
+        _.each(this.netVertices, function(v){v.determineCurrentState()});
     },
-    cleanOutgoingVertices: function() {
-        _.each(this.netVertices, function(v){v.cleanOutgoingVertices()});
+    determineNetworkEffect: function() {
+        _.each(this.netVertices, function(v){v.determineNetworkEffect()});
     },
-    updateRoot: function() {
-        var root = this.getV(0);
-        root.updateScore(1);
+    // Relays the state of each edge through a callback 'externalActivationCallback' which is provided by the external consumer
+    relayNetStateToExternalConsumer: function() {
+        var currSignalingVertices = this.getActives();
+        _.each(currSignalingVertices, function(v) {
+            var outgoingVertices = v.layers.getLayer('NeuralNetLayer').getOutgoingVertices();
+            _.each(outgoingVertices, function(targetVertice){
+                this.externalActivationCallback(v.id, targetVertice.id);
+            }.bind(this));
+        }.bind(this));
     },
-    calculateNextSignal: function() {
-        _.each(this.netVertices, function(v){v.calculateNextSignal()});
+    causeNetworkEffect: function() {
+        _.each(this.netVertices, function(v){v.causeNetworkEffect()});
+    },
+    prepareForNextState: function() {
+        _.each(this.netVertices, function(v){v.prepareForNextState()});
     }
 
 };		

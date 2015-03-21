@@ -1,55 +1,57 @@
-function Layers (verticeRef, layersParams) {
 
+function Layers (verticeRef, layersParams) {
 	var getLayer = function(layerParam) {
 		return new layerParam.layerCtor(verticeRef, layerParam.ctorParams);
 	};
 	this.layers = _.map(layersParams, getLayer);
-
-    // _.each(layersParams, function(layerParam) {
-    //     this.layers[layerParam.name] = new layerParam.layerCtor(verticeRef, layerParam.ctorParams);
-    // });
 }
 
 Layers.prototype = {
-    constructor: SignalLayer,
+    // constructor: SignalLayer,
+    constructor: Layers,
 
+    //  Private Functions
     getLayer: function(id) {
 		return _.findWhere(this.layers, {id: id});
     },
-	// determineActive
+    updateRoots: function() {
+        var updateMyRoot = function (l) {
+            l.updateRoot();
+        };
+        _.each(this.layers, updateMyRoot);
+    },
+
+
+    // Public Functions
+	// For each layer determine if the current vertice is active with regards to the layer
     determineCurrentState:function (theScoreToAdd)  {
     	var determineCurrentState = function (l) {
     		l.determineCurrentState();
     	};
         _.each(this.layers, determineCurrentState);
-
-    	// console.log('determineCurrentState');
     },
 
-    // calculateNextSignal
+    // For each layer determine if the current vertice has an effect on its neighbours and what that effect is
     determineNetworkEffect:function (theScoreToAdd)  {
     	var determineNetworkEffect = function (l)  {
     		l.determineNetworkEffect();
     	};
         _.each(this.layers, determineNetworkEffect);
-    	// console.log('determineNetworkEffect');
     },
 
-    // sendSignals
+    // For each layer causes the network effect based on the results of 'determineNetworkEffect' 
     causeNetworkEffect:function (theScoreToAdd)  {
     	var causeNetworkEffect = function (l)  {
     		l.causeNetworkEffect();
     	};
         _.each(this.layers, causeNetworkEffect);
-    	// console.log('causeNetworkEffect');
     },
 
-    // cleanOutgoingVertices
+    // For each layer perform any operation to prepare for the next cycle
     prepareForNextState:function (theScoreToAdd)  {
     	var prepareForNextState = function  (l) {
     		l.prepareForNextState();
     	};
         _.each(this.layers, prepareForNextState);
-    	// console.log('prepareForNextState');
     }
 };

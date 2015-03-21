@@ -11,17 +11,18 @@ SignalLayer.prototype = {
     constructor: SignalLayer,
 
 
-    // determineActive
+    // Public layer interface to implement
+    updateRoot: function() {
+    },
+    
     determineCurrentState:function (theScoreToAdd)  {
         if (this.active) {
             this.currColor ='red'
         } else {
             this.currColor ='blue'
         }
-        // console.log('determineCurrentState');
     },
 
-    // calculateNextSignal
     determineNetworkEffect:function (theScoreToAdd)  {
         if (0<this.cyclesTillTimeout) {
             this.cyclesTillTimeout--;
@@ -35,18 +36,15 @@ SignalLayer.prototype = {
                 edge.color = this.activeColor;
             }.bind(this));
         }
-        // console.log('determineNetworkEffect');
     },
 
-    // sendSignals
     causeNetworkEffect:function (theScoreToAdd)  {
-        // console.log('causeNetworkEffect');
     },
 
-    // cleanOutgoingVertices
     prepareForNextState:function (theScoreToAdd)  {
-        // console.log('prepareForNextState');
     },
+
+
 
     // Layer Specific Methods
     triggerSignal: function() {

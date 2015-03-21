@@ -7,7 +7,7 @@
 // };
 
 
-var getV = function(idx) {
+var getGraphVertice = function(idx) {
 	var d3Represenation = {"name":"[" + idx + "]","group":idx};
 	return [d3Represenation];
 };
@@ -39,8 +39,19 @@ var connectRule = function(v, starter, increment) {
 };
 
 var makeNet = function(vertices, edges) {
-	myNet = new Net(vertices);
-	myNet.addEdges(edges);
+	var resetNetBeforeEachCycle = function(netEdges) {
+        _.each(netEdges, function(e){ 
+            e.color = 'blue';
+        });
+	};
+
+	var activateD3Edge = function(idSrc, idTarget) {
+        var e = findEdge(idSrc, idTarget);
+        e.color = 'red';
+	};
+
+	myNet = new Net(vertices, edges, resetNetBeforeEachCycle, activateD3Edge);
+	// myNet.addEdges(edges);
 
 	return {
 	    "nodes": vertices,
@@ -102,7 +113,7 @@ edges = getEdges(edges, fifthLayer[1], forthLayer.slice(forthLayer.length-t, for
 // Get Vertices for the Net
 var verticesRepresentation = [];
 for (var i=0; i<vertices.length; i++) {
-	verticesRepresentation = verticesRepresentation.concat(getV(vertices[i]));
+	verticesRepresentation = verticesRepresentation.concat(getGraphVertice(vertices[i]));
 }
 
 console.log('vertices:' + vertices);
@@ -110,46 +121,7 @@ console.log('edges:' + edges);
 json = makeNet(verticesRepresentation, edges);
 
 
-
-
-
-
-var mainTicker = function() {
-	myNet.checkAndSetParams('threshold');
-	myNet.checkAndSetParams('verticeProbability');
-
-	// Reset the net
-	_.each(edges, function(e){
-		// if (e.color!='green') {
-			e.color = 'blue';
-		// }
-	});
-
-	myNet.updateRoot();
-	myNet.determineActive();
-	myNet.calculateNextSignal();
-
-	// Paint edges of the signaling vertices
-	var currSignalingVertices = myNet.getActives();
-	if (0<currSignalingVertices.length) {
-		console.log('yaay');
-		_.each(currSignalingVertices, function(v) {
-			var outgoingVertices = v.getOutgoingVertices();
-			_.each(outgoingVertices, function(targetVertice){
-				var e = findEdge(v.id, targetVertice.id);
-				e.color = 'red';
-			});
-		});
-	}
-	tick(); // Render the net
-
-	myNet.sendSignals();
-	myNet.cleanOutgoingVertices();
-
-	setTimeout(mainTicker, conf.cycleTime);
-};
-
-setTimeout(mainTicker, 100);
+	
 
 
 function getAllOutgoingEdges(vId) {
